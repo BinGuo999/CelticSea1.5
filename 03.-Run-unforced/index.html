@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  <link rel="shortcut icon" href="../img/favicon.ico">
+  <title>Run unforced - Celtic Sea 1.5 km NEMO Model</title>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Run unforced";
+    var mkdocs_page_input_path = "03.-Run-unforced.md";
+    var mkdocs_page_url = "/CelticSea1.5/03.-Run-unforced/";
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js" defer></script>
+  <script src="../js/modernizr-2.8.3.min.js" defer></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> Celtic Sea 1.5 km NEMO Model</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+	<ul class="current">
+	  
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="..">Home</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">Model building</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../01.-Compile-NEMO-and-XIOS/">Compile NEMO and XIOS</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../02.-Build-domain-configuration-file/">Build domain configuration</a>
+                </li>
+                <li class=" current">
+                    
+    <a class="current" href="./">Run unforced</a>
+    <ul class="subnav">
+            
+    </ul>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../04.-Make-tidal-boundary-conditions/">Prepare tidal boundaries</a>
+                </li>
+    </ul>
+	    </li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">Celtic Sea 1.5 km NEMO Model</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+        
+          <li>Model building &raquo;</li>
+        
+      
+    
+    <li>Run unforced</li>
+    <li class="wy-breadcrumbs-aside">
+      
+        <a href="https://github.com/BinGuo999/CelticSea1.5/edit/master/docs/03.-Run-unforced.md"
+          class="icon icon-github"> Edit on GitHub</a>
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <!-- WIKIDOC PDFONLY
+<h1>###_WIKIDOC_TITLE_###</h1>
+WIKIDOC PDFONLY -->
+
+<p>In this experiment an unforced ocean is initialised from rest. It is initialised with constant density. Any velocities that are generated are the result of model errors. These can be either i) genuine code bugs (hopefully zero), or ii) numerical errors. This can be a useful check that things are working as expected.</p>
+<p>The model can be initialised with constant density either by prescribing it as an initial condition, or by compiling it into the code as an analytic function. Here we do the latter.</p>
+<p><code>export CONFIG=NEMOconstTS # NEMO exec with hardwired constant T,S</code> </p>
+<p>Then compile NEMO (this was already done in Step 1 so need not be repeated). It will select and compile with a prescribed stratification given in <code>$NEMO/cfgs/$CONFIG/MY_SRC/usrdef_istate.F90</code></p>
+<p>First set paths if not already done . ./make_paths.sh</p>
+<p>Go to the experiment folder <code>cd /RUN_DIRECTORIES/EXP_unforced_constTS</code></p>
+<p>Verify that the boundary condition in <code>namelist_cfg</code> is false</p>
+<pre><code>vi namelist_cfg
+ln_bdy=.false.
+</code></pre>
+<p>Run the experiment from <code>SCRIPTS</code> folder</p>
+<pre><code>. ./run_unforced_constTS.sh
+</code></pre>
+<p>NB the <code>run_unforced_constTS.sh</code> script assumes you can submit jobs to the <code>n01-ACCORD</code> ARCHER2 account. Edit <code>submit.slurm</code> accordingly.</p>
+<p>Be efficient with HPC resource: see <a href="https://github.com/JMMP-Group/SEVERN-SWOT/wiki/notes-on-processor-decomposition">notes on processor decomposition</a></p>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../04.-Make-tidal-boundary-conditions/" class="btn btn-neutral float-right" title="Prepare tidal boundaries">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../02.-Build-domain-configuration-file/" class="btn btn-neutral" title="Build domain configuration"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+          <a href="https://github.com/BinGuo999/CelticSea1.5/" class="fa fa-github" style="float: left; color: #fcfcfc"> GitHub</a>
+      
+      
+        <span><a href="../02.-Build-domain-configuration-file/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../04.-Make-tidal-boundary-conditions/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme.js" defer></script>
+      <script src="../search/main.js" defer></script>
+
+</body>
+</html>

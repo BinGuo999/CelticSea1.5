@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  <link rel="shortcut icon" href="../img/favicon.ico">
+  <title>Prepare tidal boundaries - Celtic Sea 1.5 km NEMO Model</title>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Prepare tidal boundaries";
+    var mkdocs_page_input_path = "04.-Make-tidal-boundary-conditions.md";
+    var mkdocs_page_url = "/CelticSea1.5/04.-Make-tidal-boundary-conditions/";
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js" defer></script>
+  <script src="../js/modernizr-2.8.3.min.js" defer></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> Celtic Sea 1.5 km NEMO Model</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+	<ul class="current">
+	  
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="..">Home</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">Model building</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../01.-Compile-NEMO-and-XIOS/">Compile NEMO and XIOS</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../02.-Build-domain-configuration-file/">Build domain configuration</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../03.-Run-unforced/">Run unforced</a>
+                </li>
+                <li class=" current">
+                    
+    <a class="current" href="./">Prepare tidal boundaries</a>
+    <ul class="subnav">
+            
+    <li class="toctree-l3"><a href="#1-install-pynemo-on-archer-2">1) Install PyNEMO on ARCHER 2:</a></li>
+    
+
+    <li class="toctree-l3"><a href="#2-create-a-mask-file">2) Create a mask file</a></li>
+    
+
+    <li class="toctree-l3"><a href="#3-prepare-pynemo-files">3) Prepare PyNEMO files</a></li>
+    
+
+    <li class="toctree-l3"><a href="#4-run-pynemo">4) Run PyNEMO</a></li>
+    
+
+    <li class="toctree-l3"><a href="#5-make-sure-any-output-is-where-it-is-supposed-to-end-up">5) Make sure any output is where it is supposed to end up</a></li>
+    
+
+    </ul>
+                </li>
+    </ul>
+	    </li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">Celtic Sea 1.5 km NEMO Model</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+        
+          <li>Model building &raquo;</li>
+        
+      
+    
+    <li>Prepare tidal boundaries</li>
+    <li class="wy-breadcrumbs-aside">
+      
+        <a href="https://github.com/BinGuo999/CelticSea1.5/edit/master/docs/04.-Make-tidal-boundary-conditions.md"
+          class="icon icon-github"> Edit on GitHub</a>
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <!-- WIKIDOC PDFONLY
+<h1>###_WIKIDOC_TITLE_###</h1>
+WIKIDOC PDFONLY -->
+
+<p>In this page we describe how to run a tide-only NEMO run. We make the open ocean boundary conditions using the PyNEMO tool. Tidal boundary files contains tidal harmonics, that are used by NEMO to generate tidal elevation on-the-fly. In this workflow we use the <a href="http://www.aviso.altimetry.fr/en/data/products/auxiliary-products/global-tide-fes.html">FES2014</a> tidal products.</p>
+<p>Even for a test simulation with frozen boundaries, you need a coordinates.bdy.nc file (generated here) to tell NEMO where the frozen boundaries are.</p>
+<p>Workflow:</p>
+<h3 id="1-install-pynemo-on-archer-2">1) Install PyNEMO on ARCHER 2:</h3>
+<p>instructions
+<a href="https://github.com/JMMP-Group/SEVERN-SWOT/wiki/Notes-setting-up-PyNEMO-on-ARCHER2#notes-setting-up-pynemo-on-archer2">here</a></p>
+<h3 id="2-create-a-mask-file">2) Create a mask file</h3>
+<p>The mask variable takes values (-1 mask, 1 wet/active domain, 0 land). Need to
+only mask a single point around the edge since the rimwidth is considered to be
+part of the active domain.</p>
+<p>PyNEMO looks for the interface between -1 and 1 to generate boundary forcings. Get a
+template from domain_cfg.nc and then modify as desired around the boundary.</p>
+<p>Maked the entire boundary "land=0", except for the wet bits along the southern boundary
+which are "mask=-1"::</p>
+<pre><code>  cd /work/n01/n01/$USER/SEVERN-SWOT/BUILD_CFG/DOMAIN/
+  module load nco
+  rm -f bdy_mask.nc tmp[12].nc
+  ncks -v top_level domain_cfg_$REPO.nc tmp1.nc
+  ncrename -h -v top_level,mask tmp1.nc tmp2.nc
+  ncwa -a t tmp2.nc bdy_mask.nc
+  rm -f tmp[12].nc
+</code></pre>
+
+<p>Then in python edit the westward boundary value only</p>
+<p><code>conda activate pynemo</code></p>
+<p><code>python</code>
+Then</p>
+<pre><code>import netCDF4
+import numpy as np
+dset = netCDF4.Dataset('bdy_mask.nc','a')
+[ny,nx] = np.shape(dset.variables['mask'][:])
+for i in range(ny):
+  if dset.variables['mask'][i,1] == 1:
+    dset.variables['mask'][i,0] = -1
+  else:
+    dset.variables['mask'][i,0] = 0
+
+#dset.variables['mask'][248::,0:20] = 0 # Mask out rogue 'lake'.
+dset.close()
+exit()
+</code></pre>
+
+<h3 id="3-prepare-pynemo-files">3) Prepare PyNEMO files</h3>
+<p>The <code>namelist*.bdy</code> drives PyNEMO and has input files which point to the data sources <code>sn_src_hgr</code>, <code>sn_src_zgr</code>, <code>sn_src_msk</code>. These source files are the parent files for the (non-harmonic) time varying boundaries. Even if only tides are being generated these need to be specified and real because their presence is checked before running the tide bit of code.</p>
+<p>In this case study, we use the Atlantic - European North West Shelf - Ocean Physics Analysis and Forecast data at 1.5 km resolution for the open boundaries. Variables needed and downloadable from <a href="https://data.marine.copernicus.eu/product/NORTHWESTSHELF_ANALYSIS_FORECAST_PHY_004_013/description">CMEMS AMM15</a> are currents, salinity, temperature and sea surface height. How to build the required coordinates and mask file is described <a href="https://github.com/JMMP-Group/SEVERN-SWOT/wiki/Notes-on-CMEMS-data-for-open-boundaries">here</a>. </p>
+<p>For NOC users, in <code>/work/n01/n01/micdom/CMEMS_AMM15</code> there are <code>CMEMS_subdomain_coordinates.nc</code> and <code>CMEMS_subdomain_mask.nc</code>, copy or link them:  </p>
+<pre><code>cd /work/n01/n01/$USER/SEVERN-SWOT/BUILD_CFG/OPEN_BOUNDARIES
+ln -s /work/n01/n01/micdom/CMEMS_AMM15/CMEMS_subdomain_coordinates.nc CMEMS_subdomain_coordinates.nc
+ln -s /work/n01/n01/micdom/CMEMS_AMM15/CMEMS_subdomain_mask.nc CMEMS_subdomain_mask.nc
+ln -s ../DOMAIN/domain_cfg_SEVERN-SWOT.nc domain_cfg.nc
+ln -s ../DOMAIN/bathy_meter.nc bathy_meter.nc
+</code></pre>
+
+<p>Modify <code>namelist_FES2014.bdy</code> so that it points to the correct files:</p>
+<pre><code>   sn_src_hgr = './CMEMS_subdomain_coordinates.nc'  !  parent /grid/
+   sn_src_zgr = './inputs_src_zgr.ncml'   !  parent
+   sn_dst_hgr = './domain_cfg.nc'     ! child
+   sn_dst_zgr = './inputs_dst.ncml' ! rename output variables
+   sn_src_msk = './CMEMS_subdomain_mask.nc' ! NOT NEEDED FOR TIDES       ! parent
+   sn_bathy   = './bathy_meter.nc'  !       ! child
+
+
+!------------------------------------------------------------------------------
+!  I/O
+!------------------------------------------------------------------------------
+   sn_src_dir      = './CMEMS.ncml' ! src_files/'
+</code></pre>
+
+<p>The <code>ncml</code> files remap some variable names in the source and destination files (edit/check the paths are correct).
+For NOC Users, the <code>CMEMS.ncml</code> points to data located in <code>/work/n01/n01/micdom/CMEMS_AMM15</code>, access to the folder is needed even if for a tide-only run those files are not used and the date and time specified in the namelist are dummy values.</p>
+<p>To generate tidal boundaries select <code>ln_tide        = .true.</code> and uncomment the constituents to be used:</p>
+<pre><code>!------------------------------------------------------------------------------
+!  unstructured open boundaries
+!------------------------------------------------------------------------------
+    ln_coords_file = .true.               !  =T : produce bdy coordinates files
+    cn_coords_file = 'coordinates.bdy.nc' !  name of bdy coordinates files
+                                          !  (if ln_coords_file=.TRUE.)
+    ln_mask_file   = .true.              !  =T : read mask from file
+    cn_mask_file   = '../DOMAIN/bdy_mask.nc'            !  name of mask file
+                                          !  (if ln_mask_file=.TRUE.)
+    ln_dyn2d       = .false.              !  boundary conditions for
+                                          !  barotropic fields
+    ln_dyn3d       = .false.              !  boundary conditions for
+                                          !  baroclinic velocities
+    ln_tra         = .false.               !  boundary conditions for T and S
+    ln_ice         = .false.              !  ice boundary condition
+    nn_rimwidth    = 9                    !  width of the relaxation zone
+
+!------------------------------------------------------------------------------
+
+!------------------------------------------------------------------------------
+!  unstructured open boundaries tidal parameters
+!------------------------------------------------------------------------------
+    ln_tide        = .true.              !  =T : produce bdy tidal conditions
+    sn_tide_model  = 'FES2014'            !  Name of tidal model (FES2014|TPXO7p2)
+    clname(1)      = 'M2'                 !  constituent name
+    clname(2)      = 'S2'
+    clname(3)      = 'N2'
+    clname(4)      = 'O1'
+    clname(5)      = 'K1'
+    clname(6)      = 'K2'
+    clname(7)      = 'L2'
+    clname(8)      = 'NU2'
+    clname(9)      = 'M4'
+    clname(10)     = 'MS4'
+    clname(11)     = 'Q1'
+    clname(12)     = 'P1'
+    clname(13)     = 'S1'
+    clname(14)     = '2N2'
+    clname(15)     = 'MU2'
+    ln_trans       = .true.                !  interpolate transport rather than velocities
+</code></pre>
+
+<p>For NOC users FES2014 data are stored in <code>/work/n01/n01/shared/jelt/FES2014/</code> or are obtainable from <a href="http://www.aviso.altimetry.fr/en/data/products/auxiliary-products/global-tide-fes.html">AVISO</a>.</p>
+<pre><code>------------------------------------------------------------------------------
+!  Time information
+!------------------------------------------------------------------------------
+    nn_year_000     = 2019        !  year start
+    nn_year_end     = 2019        !  year end
+    nn_month_000    = 08          !  month start (default = 1 is years&gt;1)
+    nn_month_end    = 08       !  month end (default = 12 is years&gt;1)
+    sn_dst_calendar = 'gregorian' !  output calendar format
+    nn_base_year    = 1970        !  base year for time counter
+    ! TPXO file locations
+        sn_tide_grid   = ''
+        sn_tide_h      = ''
+        sn_tide_u      = ''
+    ! location of FES data
+        sn_tide_fes      = '/work/n01/n01/shared/jelt/FES2014/'    ! SYMBOLIC LINK
+</code></pre>
+
+<h3 id="4-run-pynemo">4) Run PyNEMO</h3>
+<pre><code>conda activate pynemo
+mkdir OUTPUT
+pynemo -s namelist_FES14.bdy
+</code></pre>
+
+<p>This creates files in <code>OUTPUT</code>.</p>
+<p>If the number of constituents to be created is more than two, is advisable to run PyNEMO as a job, using a slurm script like this <code>submitpynemo.slurm</code>
+:</p>
+<pre><code>#!/bin/bash
+#SBATCH --job-name=pynemo
+#SBATCH --time=00:10:00
+#SBATCH --nodes=1
+#SBATCH --ntasks=3
+#SBATCH --account=n01-ACCORD
+#SBATCH --partition=serial
+#SBATCH --qos=serial
+
+source ~/.bashrc
+conda activate pynemo
+cd /work/n01/n01/$USER/SEVERN-SWOT/BUILD_CFG/OPEN_BOUNDARIES/
+pynemo -s namelist_FES14.bdy
+~                                  
+</code></pre>
+
+<p>to run it:
+<code>sbatch submitpynemo.slurm</code></p>
+<h3 id="5-make-sure-any-output-is-where-it-is-supposed-to-end-up">5) Make sure any output is where it is supposed to end up</h3>
+<p>Rename and move files (names are not quite what will be expected <code>*grid_[UVT].nc</code>)</p>
+<pre><code>for var in M2 S2 O1 K1 K2 N2 L2 NU2 M4 MS4 Q1 P1 S1 2N2 MU2 #edit the the constituents
+do
+ echo $var
+        mv 'OUTPUT/SEVERN_FES14_bdytide_FES2014_'$var'_grd_U.nc' 'OUTPUT/SEVERN_FES14_bdytide_'$var'_grid_U.nc'
+        mv 'OUTPUT/SEVERN_FES14_bdytide_FES2014_'$var'_grd_V.nc' 'OUTPUT/SEVERN_FES14_bdytide_'$var'_grid_V.nc'
+        mv 'OUTPUT/SEVERN_FES14_bdytide_FES2014_'$var'_grd_Z.nc' 'OUTPUT/SEVERN_FES14_bdytide_'$var'_grid_T.nc'
+
+
+done
+</code></pre>
+
+<pre><code>mkdir /work/n01/n01/$USER/SEVERN-SWOT/INPUTS/TIDES/
+cp OUTPUT/SEVERN_FES14_bdy* /work/n01/n01/$USER/SEVERN-SWOT/INPUTS/TIDES/.
+cp OUTPUT/coordinates.bdy.nc /work/n01/n01/$USER/SEVERN-SWOT/INPUTS/OBC/.
+</code></pre>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="../03.-Run-unforced/" class="btn btn-neutral" title="Run unforced"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+          <a href="https://github.com/BinGuo999/CelticSea1.5/" class="fa fa-github" style="float: left; color: #fcfcfc"> GitHub</a>
+      
+      
+        <span><a href="../03.-Run-unforced/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+    </span>
+</div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme.js" defer></script>
+      <script src="../search/main.js" defer></script>
+
+</body>
+</html>

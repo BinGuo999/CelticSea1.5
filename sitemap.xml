@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <url>
+     <loc>https://binguo999.github.io/CelticSea1.5/</loc>
+     <lastmod>2026-10-29</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+    <url>
+     <loc>https://binguo999.github.io/CelticSea1.5/01.-Compile-NEMO-and-XIOS/</loc>
+     <lastmod>2026-10-29</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+    <url>
+     <loc>https://binguo999.github.io/CelticSea1.5/02.-Build-domain-configuration-file/</loc>
+     <lastmod>2026-10-29</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+    <url>
+     <loc>https://binguo999.github.io/CelticSea1.5/03.-Run-unforced/</loc>
+     <lastmod>2026-10-29</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+    <url>
+     <loc>https://binguo999.github.io/CelticSea1.5/04.-Make-tidal-boundary-conditions/</loc>
+     <lastmod>2026-10-29</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+</urlset>
