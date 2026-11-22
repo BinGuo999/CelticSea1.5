@@ -1,0 +1,106 @@
+--- REBUILD_NEMO/src/rebuild_nemo.F90
++++ REBUILD_NEMO/src/rebuild_nemo.F90
+@@ -93,7 +93,6 @@
+    INTEGER, DIMENSION(2) :: idomain, jdomain, rdomain, start_pos
+    INTEGER :: ji, jj, jk, jl, jr
+    INTEGER :: nargs                 ! number of arguments
+-   INTEGER, EXTERNAL :: iargc
+  
+    REAL(sp) :: ValMin, ValMax, InMin, InMax, rmdi
+    REAL(dp), ALLOCATABLE :: mdiVals(:)
+@@ -172,7 +171,6 @@
+    NAMELIST/nam_rebuild/ filebase, ndomain, dims, nslicesize, l_maskout, deflate_level, &
+                        & nc4_xchunk, nc4_ychunk, nc4_zchunk, nc4_tchunk, fchunksize         
+ 
+-   external      :: getarg
+ 
+    !End of definitions 
+ 
+@@ -199,14 +197,14 @@
+ 
+ !1.1 Get the namelist path
+    !Determine the number of arguments on the command line
+-   nargs=iargc()
++   nargs=command_argument_count()
+    !Check that the required argument is present, if it is not then set it to the default value: nam_rebuild
+    IF (nargs == 0) THEN
+       WRITE(numout,*)
+       WRITE(numout,*) 'W A R N I N G : Namelist path not supplied as command line argument. Using default, nam_rebuild.'
+       cnampath='nam_rebuild'
+    ELSE IF (nargs == 1) THEN
+-      CALL getarg(1, cnampath)
++      CALL get_command_argument(1, cnampath)
+    ELSE 
+       WRITE(numerr,*) 'E R R O R ! : Incorrect number of command line arguments. Please supply only'
+       WRITE(numerr,*) '         the path to the namelist file, or no arguments to use default value'
+--- WEIGHTS/src/scrip.F90
++++ WEIGHTS/src/scrip.F90
+@@ -91,11 +91,9 @@
+ 
+       character (char_len) :: nm_in
+ #if defined ARGC
+-      integer :: iargc
+-      external iargc
+-
+-      if (iargc() == 1) then
+-        call getarg(1, nm_in)
++
++      if (command_argument_count() == 1) then
++        call get_command_argument(1, nm_in)
+       else
+         write(6,*) 'need name of namelist file'
+         stop
+--- WEIGHTS/src/scripgrid.F90
++++ WEIGHTS/src/scripgrid.F90
+@@ -8,11 +8,9 @@
+   CHARACTER(char_len) :: infile
+ 
+ #if defined ARGC
+-  INTEGER :: IARGC
+-  EXTERNAL IARGC
+ 
+-  if (IARGC() == 1) then
+-    CALL GETARG(1, infile)
++  if (command_argument_count() == 1) then
++    CALL get_command_argument(1, infile)
+     CALL convert( infile )
+   ELSE
+     write(6,*) 'need to supply a namelist file'
+--- WEIGHTS/src/scripinterp.F90
++++ WEIGHTS/src/scripinterp.F90
+@@ -8,11 +8,9 @@
+ 
+   character (char_len) ::  nm_in
+ #if defined ARGC
+-  integer :: iargc
+-  external iargc
+ 
+-  if (iargc() == 1) then
+-    call getarg(1, nm_in)
++  if (command_argument_count() == 1) then
++    call get_command_argument(1, nm_in)
+     call process_grid(nm_in)
+   else
+     write(6,*) 'need the name of an input namelist'
+--- WEIGHTS/src/scripshape.F90
++++ WEIGHTS/src/scripshape.F90
+@@ -25,8 +25,6 @@
+       REAL(KIND=8), ALLOCATABLE :: src1(:,:),dst1(:,:),wgt1(:,:)
+       LOGICAL  :: around, verbose
+ #if defined ARGC
+-      INTEGER(KIND=4) :: iargc
+-      EXTERNAL :: iargc
+ #endif
+ 
+       CHARACTER(LEN=256) :: interp_file, output_file, name_file
+@@ -46,8 +44,8 @@
+ !     ew_wrap     = 2
+ !
+ #if defined ARGC
+-      IF (iargc() == 1) THEN
+-        CALL getarg(1, name_file)
++      IF (command_argument_count() == 1) THEN
++        CALL get_command_argument(1, name_file)
+       ELSE
+         WRITE(*,*) 'Usage: scripshape namelist_file'
+         STOP
