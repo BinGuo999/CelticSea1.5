@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<netcdf title="aggregation example" xmlns="http://www.unidata.ucar.edu/namespaces/netcdf/ncml-2.2">
+  <aggregation type="union" >
+     <netcdf xmlns="http://www.unidata.ucar.edu/namespaces/netcdf/ncml-2.2">
+        <aggregation type="joinExisting" dimName="time_counter" >
+		<scan location="/work/scratch-pw4/binguo/AMM7_met_daily"  regExp=".*_mersea.grid_T.nc$" subdirs="false"/>
+        </aggregation>
+     </netcdf>
+     <netcdf xmlns="http://www.unidata.ucar.edu/namespaces/netcdf/ncml-2.2">
+        <aggregation type="joinExisting" dimName="time_counter" >
+		<scan location="/work/scratch-pw4/binguo/AMM7_met_daily"  regExp=".*_mersea.grid_U.nc$" subdirs="false"/>
+        </aggregation>
+     </netcdf>
+     <netcdf xmlns="http://www.unidata.ucar.edu/namespaces/netcdf/ncml-2.2">
+        <aggregation type="joinExisting" dimName="time_counter" >
+		<scan location="/work/scratch-pw4/binguo/AMM7_met_daily"  regExp=".*_mersea.grid_V.nc$" subdirs="false"/>
+        </aggregation>
+     </netcdf>
+  </aggregation>
+</netcdf>
