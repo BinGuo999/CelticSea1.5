@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://binguo999.github.io/CelticSea1.5/04.-NEMO-tools-compilation/" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>04. NEMO tools compilation - Celtic Sea 1.5 km NEMO Model</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "04. NEMO tools compilation";
+        var mkdocs_page_input_path = "04.-NEMO-tools-compilation.md";
+        var mkdocs_page_url = "/CelticSea1.5/04.-NEMO-tools-compilation/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> Celtic Sea 1.5 km NEMO Model
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Model building</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../01.-XIOS-compilation/">01. XIOS compilation</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../02.-Compile-NEMO/">02. Compile NEMO</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../03.-Run-the-model/">03. Run the model</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">04. NEMO tools compilation</a>
+    <ul class="current">
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../05.-Build-domain-configuration-file/">05. Build domain configuration file</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../06.-Make-tidal-boundary-conditions/">06. Make tidal boundary conditions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../07.INITIAL-CONDITION/">07. Initial condition</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../08.Surface-Forcing/">08. Surface forcing</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../09.River-Forcing/">09. River forcing</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../11.-Shortcut-for-experienced-NEMO-users-%28for-NOC-people%29/">11. Shortcut for experienced NEMO users (for NOC people)</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">Celtic Sea 1.5 km NEMO Model</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Model building</li>
+      <li class="breadcrumb-item active">04. NEMO tools compilation</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/BinGuo999/CelticSea1.5/edit/master/docs/04.-NEMO-tools-compilation.md" class="icon icon-github"> Edit on GitHub</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <!-- WIKIDOC PDFONLY
+<h1>###_WIKIDOC_TITLE_###</h1>
+WIKIDOC PDFONLY -->
+
+<p>These internal NEMO tools in <code>NEMO_VER/tools</code> are used for NEMO input building or diagnosis and other additionalfunction. Here we  build four a domain, prepare interpolation weights, and combine output split across MPI ranks. Here we provide the four Compile them after <a href="../02.-Compile-NEMO/">building NEMO</a>, which installs the source tree and the Cirrus architecture file. </p>
+<h3 id="compile-the-tools">Compile the tools</h3>
+<p>Run the script from <code>Scripts/</code>.</p>
+<pre><code class="language-bash">. ./5.make_tools.sh
+</code></pre>
+<p>The script loads the same GNU, HDF5 and NetCDF modules as the NEMO build. It makes two sets of source changes before compiling.</p>
+<ol>
+<li>
+<p>It copies <code>dom_oce.f90</code>, <code>domain.f90</code> and <code>domzgr.f90</code> from <code>CS1.5_NEMO_support/DOMAINcfg_src/</code> into <code>$TDIR/DOMAINcfg/src/</code>. These files add the Celtic Sea wetting and drying changes, including writing <code>ht_wd</code> and <code>rn_wd_ref_depth</code> to <code>domain_cfg.nc</code>.</p>
+</li>
+<li>
+<p>It applies the five WEIGHTS patches in <code>CS1.5_NEMO_support/tool_patch_files/</code>. </p>
+</li>
+</ol>
+<h3 id="find-the-executables">Find the executables</h3>
+<p><code>maketools</code> builds each tool with <code>$HPC_TARG</code> from <code>1.make_path.sh</code>. Look for the results under <code>$TDIR</code> (<code>$NEMO/tools</code>).</p>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Purpose</th>
+<th>Executables, relative to <code>$TDIR</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>NESTING</td>
+<td>Prepare nested coordinates, bathymetry and other inputs</td>
+<td><code>NESTING/BLD/bin/agrif_*.exe</code></td>
+</tr>
+<tr>
+<td>REBUILD_NEMO</td>
+<td>Combine files written separately by MPI ranks</td>
+<td><code>REBUILD_NEMO/BLD/bin/rebuild_nemo.exe</code></td>
+</tr>
+<tr>
+<td>WEIGHTS</td>
+<td>Prepare horizontal interpolation weights and remap fields for surface forcing</td>
+<td><code>WEIGHTS/BLD/bin/</code> contains <code>scrip.exe</code>, <code>scripgrid.exe</code>, <code>scripinterp.exe</code> and <code>scripshape.exe</code></td>
+</tr>
+<tr>
+<td>DOMAINcfg</td>
+<td>Generate <code>domain_cfg.nc</code> from grid and bathymetry inputs</td>
+<td><code>DOMAINcfg/BLD/bin/make_domain_cfg.exe</code></td>
+</tr>
+</tbody>
+</table>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../03.-Run-the-model/" class="btn btn-neutral float-left" title="03. Run the model"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../05.-Build-domain-configuration-file/" class="btn btn-neutral float-right" title="05. Build domain configuration file">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/BinGuo999/CelticSea1.5" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+        </span>
+    
+    
+      <span><a href="../03.-Run-the-model/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../05.-Build-domain-configuration-file/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

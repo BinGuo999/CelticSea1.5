@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://binguo999.github.io/CelticSea1.5/03.-Run-the-model/" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>03. Run the model - Celtic Sea 1.5 km NEMO Model</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "03. Run the model";
+        var mkdocs_page_input_path = "03.-Run-the-model.md";
+        var mkdocs_page_url = "/CelticSea1.5/03.-Run-the-model/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> Celtic Sea 1.5 km NEMO Model
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Model building</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../01.-XIOS-compilation/">01. XIOS compilation</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../02.-Compile-NEMO/">02. Compile NEMO</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">03. Run the model</a>
+    <ul class="current">
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../04.-NEMO-tools-compilation/">04. NEMO tools compilation</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../05.-Build-domain-configuration-file/">05. Build domain configuration file</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../06.-Make-tidal-boundary-conditions/">06. Make tidal boundary conditions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../07.INITIAL-CONDITION/">07. Initial condition</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../08.Surface-Forcing/">08. Surface forcing</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../09.River-Forcing/">09. River forcing</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../11.-Shortcut-for-experienced-NEMO-users-%28for-NOC-people%29/">11. Shortcut for experienced NEMO users (for NOC people)</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">Celtic Sea 1.5 km NEMO Model</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Model building</li>
+      <li class="breadcrumb-item active">03. Run the model</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/BinGuo999/CelticSea1.5/edit/master/docs/03.-Run-the-model.md" class="icon icon-github"> Edit on GitHub</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <!-- WIKIDOC PDFONLY
+<h1>###_WIKIDOC_TITLE_###</h1>
+WIKIDOC PDFONLY -->
+
+<p>Once you have compiled XIOS and NEMO, you can run the CelticSea1.5 test case. This guide describes the inputs needed for a fully forced run and where to download the model grid and sample forcing files. You can run the test now using these files, or work through the input generation steps first and return to this section later. You can also switch individual forcings on or off to build up the model setup gradually and check that each input works as expected.</p>
+<p>The following sections provide step-by-step instructions and scripts for generating the domain configuration file (<code>domain_cfg.nc</code>) and the required forcing inputs.</p>
+<h3 id="prepare-the-run-directory">Prepare the run directory</h3>
+<p>In <code>Scripts/1.make_path.sh</code>, set <code>FORCING_DIR</code> to the path of the downloaded <code>CelticSea1.5_input_1993</code>. The bundle contains <code>domain_cfg.nc</code> at its root, and input data in <code>IC/</code>, <code>OBC/</code>, <code>SBC/</code>, <code>River/</code> and <code>TIDES/</code>.</p>
+<p>Prepare the test run from <code>Scripts/</code>.</p>
+<pre><code class="language-bash">. ./1.make_path.sh
+. ./6.make_test_run.sh
+cd $EXP
+</code></pre>
+<p>The script copies the namelists, XIOS XML files and <code>runnemo.slurm</code> from <code>RUN_DIRECTORIES/EXP_test_1993/</code> to <code>$EXP</code>. The default destination is <code>$WDIR/RUN_DIRECTORY/CS1.5_1993_TEST</code>. Use a fresh experiment directory for a new run. Step 6 copies over existing template files and stops if one of its symbolic links already exists.</p>
+<table>
+<thead>
+<tr>
+<th>Path in the run directory</th>
+<th>Input</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>domain_cfg.nc</code></td>
+<td>Celtic Sea grid and bathymetry information</td>
+</tr>
+<tr>
+<td><code>IC/</code></td>
+<td>Temperature and salinity information on 1 January 1993</td>
+</tr>
+<tr>
+<td><code>OBC/</code></td>
+<td>Monthly open boundary files for 1993. The job also reads <code>coordinates.bdy.nc</code> for boundary grid information.</td>
+</tr>
+<tr>
+<td><code>SBC/</code></td>
+<td>1993 ERA5 forcing and both atmospheric interpolation weights. Keep the weights inside <code>SBC/</code>, where NEMO reads them.</td>
+</tr>
+<tr>
+<td><code>river/</code></td>
+<td>1993 GloFAS runoff</td>
+</tr>
+<tr>
+<td><code>TIDES/</code></td>
+<td>FES2014 tidal boundary files</td>
+</tr>
+<tr>
+<td><code>nemo.exe</code>, <code>xios_server.exe</code></td>
+<td>Links to the executables under <code>$CONFIG_DIR/BLD/bin/</code> and <code>$XIOS_DIR/bin/</code>, respectively</td>
+</tr>
+</tbody>
+</table>
+<h3 id="edit-the-namelist">Edit the namelist</h3>
+<p>A namelist is a text file that set up the numerical options in NEMO model. <code>namelist_ref</code> supplies the default settings, and <code>namelist_cfg</code> supplies the settings for this specific experiment. In this configuration, <code>namelist_cfg</code> is regenerated from <code>namelist.template</code> for each month, allowing the simulation to run in monthly segments, with the output archived separately for each month. So, do not edit <code>namelist_cfg</code>, edit <code>namelist.template</code>.</p>
+<p>Some key namelist settings:
+- <code>cn_domcfg = "./domain_cfg.nc"</code> selects the Celtic Sea grid file.
+- <code>rn_rdt = 80.</code> sets an 80-second timestep.
+- <code>ln_tsd_init = __INITS__</code> controls whether NEMO reads the initial temperature and salinity. The Slurm script sets it to <code>.true.</code> for the first month and <code>.false.</code> for restart months.
+- <code>ln_blk = .true.</code> enables the bulk formula for ERA5 surface forcing.
+- <code>ln_rnf = .true.</code> enables river runoff.
+- <code>ln_bdy = .true.</code> enables open boundary conditions.
+- <code>ln_tide = .true.</code> enables tidal forcing.</p>
+<h3 id="edit-the-slurm-script">Edit the Slurm script</h3>
+<p>Modify runscript.slurm for your HPC environment (account details, queue, walltime, and core count).</p>
+<p>In the CelticSea1.5 hindcast, simulating January through December 1997 took about 1 hour and 50 minutes of wall-clock time on four Cirrus nodes (1 hour, 48 minutes and 11 seconds in Slurm job <code>630493</code>).</p>
+<p>The variables <code>iy1</code> and <code>iy2</code> set the first and last simulation years. For the supplied 1993 run, <code>ms=1</code> and <code>end_month=12</code> select January through December, and <code>nit0=1</code> starts at the first timestep. The first month reads the initial conditions. Each later month reads the restart from the previous month. The default <code>tpd=1080</code> matches the 80-second timestep in the namelist. If you change <code>rn_rdt</code>, remember also update <code>tpd</code> to match the number of timesteps per day.</p>
+<h3 id="submit-the-experiment-on-cirrus">Submit the experiment on Cirrus</h3>
+<pre><code class="language-bash">sbatch runnemo.slurm
+squeue -u your_user_name
+</code></pre>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../02.-Compile-NEMO/" class="btn btn-neutral float-left" title="02. Compile NEMO"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../04.-NEMO-tools-compilation/" class="btn btn-neutral float-right" title="04. NEMO tools compilation">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/BinGuo999/CelticSea1.5" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+        </span>
+    
+    
+      <span><a href="../02.-Compile-NEMO/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../04.-NEMO-tools-compilation/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

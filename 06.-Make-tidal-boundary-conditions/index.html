@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://binguo999.github.io/CelticSea1.5/06.-Make-tidal-boundary-conditions/" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>06. Make tidal boundary conditions - Celtic Sea 1.5 km NEMO Model</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "06. Make tidal boundary conditions";
+        var mkdocs_page_input_path = "06.-Make-tidal-boundary-conditions.md";
+        var mkdocs_page_url = "/CelticSea1.5/06.-Make-tidal-boundary-conditions/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> Celtic Sea 1.5 km NEMO Model
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Model building</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../01.-XIOS-compilation/">01. XIOS compilation</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../02.-Compile-NEMO/">02. Compile NEMO</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../03.-Run-the-model/">03. Run the model</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../04.-NEMO-tools-compilation/">04. NEMO tools compilation</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../05.-Build-domain-configuration-file/">05. Build domain configuration file</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">06. Make tidal boundary conditions</a>
+    <ul class="current">
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../07.INITIAL-CONDITION/">07. Initial condition</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../08.Surface-Forcing/">08. Surface forcing</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../09.River-Forcing/">09. River forcing</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../11.-Shortcut-for-experienced-NEMO-users-%28for-NOC-people%29/">11. Shortcut for experienced NEMO users (for NOC people)</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">Celtic Sea 1.5 km NEMO Model</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Model building</li>
+      <li class="breadcrumb-item active">06. Make tidal boundary conditions</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/BinGuo999/CelticSea1.5/edit/master/docs/06.-Make-tidal-boundary-conditions.md" class="icon icon-github"> Edit on GitHub</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <!-- WIKIDOC PDFONLY
+<h1>###_WIKIDOC_TITLE_###</h1>
+WIKIDOC PDFONLY -->
+
+<p>Use pyBDY to interpolate FES2014 tidal harmonics onto the Celtic Sea 1.5 km open boundary. The September 2026 run in <code>CELTIC8_GEE_SF12_cutout</code> used the 426 × 312 <code>GEG_SF12</code> domain from <a href="../05.-Build-domain-configuration-file/">05. Build domain configuration file</a>. It produced amplitudes and phases for 24 tidal constituents and the boundary coordinates used to locate them on the NEMO grid.</p>
+<p>The <a href="../03.-Run-the-model/">1993 test run</a> already uses these harmonics from the forcing bundle. Follow this page to regenerate them.</p>
+<h3 id="1-install-pybdy">1. Install pyBDY</h3>
+<p>From a checkout of pyBDY, create the Conda environment and install the package. The environment file specifies Python 3.9. The NcML reader also needs Java. <a href="https://github.com/NOC-MSM/pyBDY">pyBDY repository</a></p>
+<pre><code class="language-bash">conda env create -n pybdy -f environment.yml
+conda activate pybdy
+python -m pip install -e .
+pybdy -h
+</code></pre>
+<h3 id="2-prepare-the-input-files">2. Prepare the input files</h3>
+<p>Set <code>ARCHIVED_RUN</code> to the path of your copy of <code>CELTIC8_GEE_SF12_cutout</code>. Set <code>DOMAIN_INPUTS</code> to the directory containing the matching <code>domain_cfg.nc</code> and <code>bathy_meter.nc</code>, such as the <code>backup_260921_GEG_SF12_cutout</code> domain archive. The original links in the pyBDY archive point to ARCHER2 <code>/work</code> paths. Create fresh links to the Cirrus copies.</p>
+<p>From the Celtic Sea checkout's <code>Scripts/</code> directory, load the paths and prepare a working directory.</p>
+<pre><code class="language-bash">source ./1.make_path.sh
+
+ARCHIVED_RUN=/path/to/CELTIC8_GEE_SF12_cutout
+DOMAIN_INPUTS=/path/to/backup_260921_GEG_SF12_cutout
+
+mkdir -p &quot;$WDIR/BUILD_CFG/OPEN_BOUNDARIES/GEG_SF12_cutout&quot;
+cd &quot;$WDIR/BUILD_CFG/OPEN_BOUNDARIES/GEG_SF12_cutout&quot;
+
+cp &quot;$ARCHIVED_RUN/namelist_AMM7CELTIC.bdy&quot; .
+cp &quot;$ARCHIVED_RUN/grid_name_map_sco.json&quot; .
+ln -s &quot;$ARCHIVED_RUN/AMM7_domain_cfg_sub.nc&quot; .
+ln -s &quot;$ARCHIVED_RUN/mesh_mask_from_AMM7_domain_cfg_sub.nc&quot; .
+ln -s &quot;$ARCHIVED_RUN/bdy_mask.nc&quot; .
+ln -s &quot;$DOMAIN_INPUTS/domain_cfg.nc&quot; .
+ln -s &quot;$DOMAIN_INPUTS/bathy_meter.nc&quot; .
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Input</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>AMM7_domain_cfg_sub.nc</code> and <code>mesh_mask_from_AMM7_domain_cfg_sub.nc</code></td>
+<td>AMM7 parent grid and wet-cell mask</td>
+</tr>
+<tr>
+<td><code>domain_cfg.nc</code> and <code>bathy_meter.nc</code></td>
+<td>Celtic Sea target grid and September bathymetry</td>
+</tr>
+<tr>
+<td><code>bdy_mask.nc</code></td>
+<td>Celtic Sea open-boundary mask. Cells marked <code>-1</code> are outside the open boundary, <code>1</code> marks the active domain, and <code>0</code> marks land or closed areas.</td>
+</tr>
+<tr>
+<td><code>grid_name_map_sco.json</code></td>
+<td>NetCDF variable names for the source and target grids, both configured as <code>sco</code></td>
+</tr>
+</tbody>
+</table>
+<p>Keep <code>ln_mask_file = .true.</code> to read the saved mask and <code>ln_coords_file = .true.</code> to write <code>coordinates.bdy.nc</code>. The mask, together with <code>nn_rimwidth = 9</code>, defines the boundary points and their ordering.</p>
+<h3 id="3-set-the-data-paths-in-the-namelist">3. Set the data paths in the namelist</h3>
+<p>Edit these two entries in the copied <code>namelist_AMM7CELTIC.bdy</code>.</p>
+<pre><code class="language-fortran">sn_src_dir  = '/path/to/pyBDY/inputs/src_data_local.ncml'
+sn_tide_fes = '/path/to/FES2014/'
+</code></pre>
+<ul>
+<li><code>sn_src_dir</code> points to a readable NcML file. pyBDY opens the source reader before extracting tides. The September run used <code>src_data_local.ncml</code> under the archived pyBDY <code>inputs/</code> directory. Keep that file beside its <code>benchmark/data/</code> folder so its relative paths resolve.</li>
+<li><code>sn_tide_fes</code> points to your Cirrus copy of the FES2014 data directory. The archive links to the old ARCHER2 copy. Use the extrapolated elevation and both current components in <code>ocean_tide_extrapolated/</code>, <code>eastward_velocity/</code>, and <code>northward_velocity/</code>. Each directory should contain the constituent files, for example <code>m2.nc</code>. <a href="https://www.aviso.altimetry.fr/en/data/data-access/index.php?L=1&amp;id=1279">AVISO FES data access</a></li>
+</ul>
+<p>Keep <code>ln_tide = .true.</code>, <code>sn_tide_model = 'FES2014'</code>, and <code>ln_trans = .true.</code>. The archived setup disables the time-varying barotropic, baroclinic, tracer, and ice outputs. The dates in the namelist do not limit the use of the tidal harmonics to those years.</p>
+<h3 id="4-run-pybdy-on-cirrus">4. Run pyBDY on Cirrus</h3>
+<p>Save the following as <code>submitpynemo.slurm</code> in the working directory. Set the project account and the path to your Conda installation on a filesystem accessible to compute nodes. The job starts one pyBDY process. It requests 25 cores to allow roughly the same memory as the original 64 GB ARCHER2 request on a standard Cirrus node. <a href="https://docs.cirrus.ac.uk/user-guide/batch/#resource-limits">Cirrus resource limits</a></p>
+<pre><code class="language-bash">#!/bin/bash
+#SBATCH --job-name=pybdy_tide
+#SBATCH --account=YOUR_PROJECT
+#SBATCH --partition=standard
+#SBATCH --qos=standard
+#SBATCH --time=02:00:00
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=25
+
+set -e
+cd &quot;$SLURM_SUBMIT_DIR&quot;
+
+source /path/to/miniconda3/etc/profile.d/conda.sh
+conda activate pybdy
+export JAVA_HOME=/usr/lib/jvm/jre-11
+export OMP_NUM_THREADS=1
+
+mkdir -p output_20260922
+pybdy -s namelist_AMM7CELTIC.bdy
+</code></pre>
+<p>Submit from the directory containing the namelist.</p>
+<pre><code class="language-bash">sbatch submitpynemo.slurm
+</code></pre>
+<h3 id="5-check-the-output">5. Check the output</h3>
+<p>The September namelist writes to <code>output_20260922/</code>. Expect <code>coordinates.bdy.nc</code> and <strong>72 tidal NetCDF files</strong>, one per grid (T, U and V) for each of the 24 constituents. For example, the M2 files are named <code>CELTIC_bdytide_FES2014_M2_grid_T.nc</code> and similarly for U and V.</p>
+<pre><code class="language-bash">ls -lh output_20260922/coordinates.bdy.nc
+find output_20260922 -maxdepth 1 -name 'CELTIC_bdytide_FES2014_*_grid_[TUV].nc' | wc -l
+</code></pre>
+<p>The 1993 test-run script links files from the forcing bundle's <code>TIDES/</code> directory and uses <code>OBC/coordinates.bdy.nc</code> at the run-directory root. The NEMO namelist reads the prefix <code>./TIDES/CELTIC_bdytide_FES2014_</code>. When substituting regenerated harmonics, check that their boundary points and ordering still match the coordinates used by the monthly AMM7 boundary files. The archived tidal coordinates and the forcing bundle's boundary coordinates have identical NetCDF variable values.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../05.-Build-domain-configuration-file/" class="btn btn-neutral float-left" title="05. Build domain configuration file"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../07.INITIAL-CONDITION/" class="btn btn-neutral float-right" title="07. Initial condition">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/BinGuo999/CelticSea1.5" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+        </span>
+    
+    
+      <span><a href="../05.-Build-domain-configuration-file/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../07.INITIAL-CONDITION/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
