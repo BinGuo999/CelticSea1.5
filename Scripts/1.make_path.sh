@@ -21,7 +21,7 @@ export NEMO_VER=NEMO_4.0.4
 # Set some HPC parameters to control compilation
 export HPC_TARG=cirrus-gnu-mpich
 # Directory containing the domain and forcing files.
-export FORCING_DIR=/epccfs/n01/n01/binguo/github_binguo999/CelticSea1.5_forcing_1993-95
+export FORCING_DIR=/epccfs/n01/n01/binguo/github_binguo999/CelticSea1.5_input_1993
 ############  things to be changed  ##############################
 
 ############  things no need to change  ##############################

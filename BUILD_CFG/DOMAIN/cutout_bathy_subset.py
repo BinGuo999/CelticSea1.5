@@ -11,7 +11,7 @@ import xarray as xr
 parent_file = "./GEG_SF12.nc"
 
 # Output bathymetry file
-output_file = "./CelticS_bathy_meter_260410.nc"
+output_file = "./CelticS_bathy_meter.nc"
 
 # Cut-out indices
 imin = 500

@@ -11,7 +11,7 @@ import xarray as xr
 parent_file = "./GEG_SF12.nc"
 
 # Output coordinate file
-output_file = "./CelticS_coordinates_260410.nc"
+output_file = "./CelticS_coordinates.nc"
 
 # Cut-out indices (limit bathy to 200m )
 imin = 500

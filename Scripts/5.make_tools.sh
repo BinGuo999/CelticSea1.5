@@ -17,7 +17,8 @@ module load PrgEnv-gnu
 module load cray-hdf5-parallel
 module load cray-netcdf-hdf5parallel
 
-export LD_LIBRARY_PATH=$CRAY_LD_LIBRARY_PATH:$LD_LIBRARY_PATH
+# NOT NEEDED ON CIRRUS
+#export LD_LIBRARY_PATH=$CRAY_LD_LIBRARY_PATH:$LD_LIBRARY_PATH
 
 #------------------------------------------------------------------
 # 2. Apply the patches
