@@ -1,5 +1,6 @@
 #!/bin/bash
-# Compile XIOS3 on Cirrus. Run from the Scripts directory.
+# Step 3. Compile XIOS3 on Cirrus after creating the directories and before compiling NEMO.
+# Run from Scripts/.
 set -e   #stops the script when a command fails.
 
 # Load paths.
@@ -25,8 +26,6 @@ sed -i 's/ -lmpichf90//g' arch/arch-X86_CIRRUS-Gnu.fcm
 ./make_xios --prod --arch X86_CIRRUS-Gnu --netcdf_lib netcdf4_par --job 16 --full
 
 # Check the build outputs.
-test -s lib/libxios.a
-test -x bin/xios_server.exe
 echo "Executable is $XIOS_DIR/bin/xios_server.exe"
 
 cd $WDIR

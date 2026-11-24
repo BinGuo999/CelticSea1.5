@@ -15,7 +15,8 @@ module load cray-hdf5-parallel
 module load cray-netcdf-hdf5parallel
 module load subversion/1.14.2
 
-export LD_LIBRARY_PATH=$CRAY_LD_LIBRARY_PATH:$LD_LIBRARY_PATH
+# NOT NEEDED ON CIRRUS
+#export LD_LIBRARY_PATH=$CRAY_LD_LIBRARY_PATH:$LD_LIBRARY_PATH
 
 #################################################################################################
 # Check out NEMO 4.0.4 from the SVN repository
@@ -39,7 +40,6 @@ sed -i "s?XXX_XIOS_DIR_XXX?$XIOS_DIR?g" ./arch/arch-$HPC_TARG.fcm
 mkdir -p $CONFIG_DIR
 
 # Register the configuration, 
-touch $CDIR/work_cfgs.txt
 echo "$CONFIG OCE" >> $CDIR/work_cfgs.txt
 
 #################################################################################################
