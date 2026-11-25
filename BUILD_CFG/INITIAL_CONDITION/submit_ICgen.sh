@@ -17,5 +17,5 @@
 source ~/.bashrc
 conda activate coast
 
-cd /home/users/binguo/IC/CELTIC8_GEG_SF12
-python -u UK500_icsgen.py
+cd /home/users/binguo/IC/CelticS1.5_ICgen
+python -u CelticS1.5_ICgen.py

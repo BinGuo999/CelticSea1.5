@@ -155,15 +155,14 @@ def check_depths(cfg, cfg_fn_depth0=None):
         else:
             print("File exists but gdept_0 not found, will compute it")
 
-    # Case 3: original behaviour (UNCHANGED)
-    depth_dim = set(["nav_lev","z"]).intersection(set(cfg.dims))
+    # Case 3: reconstruct the T-point depths as pyBDY does.
+    e3w = cfg["e3w_0"]
+    depth_dim = "z" if "z" in e3w.dims else "nav_lev"
+    surface_e3w = e3w.isel({depth_dim: 0}, drop=True)
+    cfg["gdept_0"] = e3w.cumsum(dim=depth_dim) - 0.5 * surface_e3w
 
-    if 'gdept_0' not in list(cfg.keys()):
-        print(cfg)
-        cfg['gdept_0'] = cfg.e3t_0.cumsum(dim=depth_dim)
-
-        with ProgressBar():
-            cfg.to_netcdf("Domain_cfg_with_gdept_0.nc")
+    with ProgressBar():
+        cfg.to_netcdf("Domain_cfg_with_gdept_0.nc")
 
     return cfg
 

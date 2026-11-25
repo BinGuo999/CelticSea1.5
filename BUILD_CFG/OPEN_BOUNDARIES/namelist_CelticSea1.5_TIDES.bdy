@@ -20,19 +20,19 @@
 !------------------------------------------------------------------------------
 !  grid information
 !------------------------------------------------------------------------------
-   sn_src_hgr = './AMM7_domain_cfg_sub.nc'  ! subdomain cut from AMM7 parent /grid/   
-   sn_src_zgr = './AMM7_domain_cfg_sub.nc'   ! subdomain parent
+   sn_src_hgr = './AMM7_domain_cfg.nc'  ! domain cut from AMM7 parent /grid/   
+   sn_src_zgr = './AMM7_domain_cfg.nc'   ! domain parent
    sn_dst_hgr = './domain_cfg.nc'    !  ! child
    sn_dst_zgr = './domain_cfg.nc' ! rename output variables
-   sn_src_msk = './mesh_mask_from_AMM7_domain_cfg_sub.nc' ! derived from AMM7 subdomain domain_cfg.nc       ! parent   
+   sn_src_msk = './mesh_mask_from_AMM7.nc' ! derived from AMM7domain domain_cfg.nc       ! parent   
    sn_bathy   = './bathy_meter.nc'  !       ! child
    sn_nme_map = './grid_name_map_sco.json'     ! json file mapping variable names to netcdf vars
 
 !------------------------------------------------------------------------------
 !  I/O 
 !------------------------------------------------------------------------------
-   sn_src_dir      = '/work/n01/n01/binguo/pyBDY/inputs/src_data_local.ncml'
-   sn_dst_dir      = 'output_20260922'
+   sn_src_dir      = './CMEMS.ncml'
+   sn_dst_dir      = './output_tides/'
    sn_fn      = 'CELTIC'             ! prefix for output files
    nn_fv      = -1e20                 !  set fill value for output files
    nn_src_time_adj = 0                ! src time adjustment
@@ -99,7 +99,7 @@
 !  Time information
 !------------------------------------------------------------------------------
     sn_date_start   = '1993-01-01'    !  dst output date start YYYY-MM-DD
-    sn_date_end     = '1994-12-31'    !  dst output date end YYYY-MM-DD
+    sn_date_end     = '1994-01-01'    !  dst output date end YYYY-MM-DD
     sn_dst_calendar = 'gregorian' !  output calendar format
     sn_date_origin    = '1900-01-01'        !  base year for time counter
     ln_time_interpolation = .true. !  set to false to use parent
