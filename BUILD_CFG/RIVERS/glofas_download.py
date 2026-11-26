@@ -6,7 +6,7 @@ dataset = "cems-glofas-historical"
 OUT_DIR = Path("glofas_downloads")
 OUT_DIR.mkdir(exist_ok=True)
 
-YEARS = [str(year) for year in range(1994, 2026)]
+YEARS = [str(year) for year in range(1993, 2026)]
  
 base_request = {
     "system_version": ["version_4_0"],
